@@ -12,13 +12,25 @@ const Landing = () => {
       setBtn(true);
     }, 1000);
   }, []);
-
+  const setLeftImg = () => {
+    refWolferine.current.classList.add("leftImg");
+  };
+  const setRightImg = () => {
+    refWolferine.current.classList.add("rightImg");
+  };
+  const clearImg = () => {
+    if (refWolferine.current.classList.contains("leftImg")) {
+      refWolferine.current.classList.remove("leftImg");
+    } else if (refWolferine.current.classList.contains("rightImg")) {
+      refWolferine.current.classList.remove("rightImg");
+    }
+  };
   const displayBtn = btn && (
     <Fragment>
-      <div className="leftBox">
+      <div className="leftBox" onMouseOver={setLeftImg} onMouseOut={clearImg}>
         <button className="btn-welcome">Inscription</button>
       </div>
-      <div className="rightBox">
+      <div className="rightBox" onMouseOver={setRightImg} onMouseOut={clearImg}>
         <button className="btn-welcome">Connexion</button>
       </div>
     </Fragment>
