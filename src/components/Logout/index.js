@@ -3,7 +3,6 @@ import { FirebaseContext } from "../Firebase";
 const Logout = () => {
   const [checked, setChecked] = useState(false);
   const firebase = useContext(FirebaseContext);
-  console.log(checked);
   useEffect(() => {
     if (checked) {
       console.log("déconnexion");
