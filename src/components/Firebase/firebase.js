@@ -24,5 +24,8 @@ class Firebase {
     this.auth.signInWithEmailAndPassword(email, password);
   // DECONNEXION
   signoutUser = () => this.auth.signOut();
+
+  // Récupere le mot de passe
+  passwordReset = (email) => this.auth.sendPasswordResetEmail(email);
 }
 export default Firebase;
