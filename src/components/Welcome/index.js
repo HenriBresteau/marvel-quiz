@@ -5,6 +5,7 @@ import Quiz from "../Quiz";
 
 const Welcome = (props) => {
   const [userSession, setUserSession] = useState(null);
+  const [userData, setUserData] = useState({});
 
   const firebase = useContext(FirebaseContext);
 
@@ -12,10 +13,24 @@ const Welcome = (props) => {
     let listener = firebase.auth.onAuthStateChanged((user) => {
       user ? setUserSession(user) : props.history.push("/");
     });
+    if (!!userSession) {
+      firebase
+        .user(userSession.uid)
+        .get()
+        .then((doc) => {
+          if (doc && doc.exists) {
+            const myData = doc.data();
+            setUserData(myData);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     return () => {
       listener();
     };
-  }, [firebase, props]);
+  }, [firebase, props, userSession]);
   return userSession === null ? (
     <Fragment>
       <div className="loader"></div>
@@ -25,8 +40,7 @@ const Welcome = (props) => {
     <div className="quiz-bg">
       <div className="container">
         <Logout></Logout>
-        <h2>Welcome</h2>
-        <Quiz></Quiz>
+        <Quiz userData={userData}></Quiz>
       </div>
     </div>
   );
