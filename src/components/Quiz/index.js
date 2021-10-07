@@ -2,7 +2,10 @@ import ProgressBar from "../ProgressBar";
 import React, { Component } from "react";
 import Levels from "../Levels";
 import { QuizMarvel } from "../quizMarvel";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 class Quiz extends Component {
   state = {
     levelNames: ["debutant", "confirme", "expert"],
@@ -15,6 +18,7 @@ class Quiz extends Component {
     btnDisabled: true,
     userAnswer: null,
     score: 0,
+    showWelcomMsg: false,
   };
   storeDataRef = React.createRef();
 
@@ -46,6 +50,27 @@ class Quiz extends Component {
       this.setState((prevState) => ({
         score: prevState.score + 1,
       }));
+      toast.success("BRAVO +1 👌", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        bodyClassName: "toastify-color-success",
+      });
+    } else {
+      toast.error("Raté ! 💩 ", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        bodyClassName: "toastify-color-error",
+      });
     }
   };
   componentDidUpdate(prevProps, prevState) {
@@ -63,7 +88,27 @@ class Quiz extends Component {
         userAnswer: null,
       });
     }
+    if (this.props.userData.pseudo) {
+      this.showWelcomeMsg(this.props.userData.pseudo);
+    }
   }
+  showWelcomeMsg = (pseudo) => {
+    if (!this.state.showWelcomMsg) {
+      this.setState({
+        showWelcomMsg: true,
+      });
+      toast(`Welcome ${pseudo}, et bonne chance ! `, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        bodyClassName: "toastify-color-welcome",
+      });
+    }
+  };
   submitAnswer = (selectedOption) => {
     this.setState({
       userAnswer: selectedOption,
