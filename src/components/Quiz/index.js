@@ -14,11 +14,14 @@ class Quiz extends Component {
     idQuestion: 0,
     btnDisabled: true,
     userAnswer: null,
+    score: 0,
   };
+  storeDataRef = React.createRef();
 
   loadQuestions = (level) => {
     const feacthArrayQuiz = QuizMarvel[0].quizz[level];
     if (feacthArrayQuiz.length >= this.state.maxQuestions) {
+      this.storeDataRef.current = feacthArrayQuiz;
       const newArray = feacthArrayQuiz.map(
         ({ answer, ...keepRest }) => keepRest
       );
@@ -30,11 +33,34 @@ class Quiz extends Component {
   componentDidMount() {
     this.loadQuestions(this.state.levelNames[this.state.quizLevel]);
   }
+  nextQuestion = () => {
+    if (this.state.idQuestion === this.state.maxQuestions - 1) {
+      // END
+    } else {
+      this.setState((prevState) => ({
+        idQuestion: prevState.idQuestion + 1,
+      }));
+    }
+    const goodAnwer = this.storeDataRef.current[this.state.idQuestion].answer;
+    if (this.state.userAnswer === goodAnwer) {
+      this.setState((prevState) => ({
+        score: prevState.score + 1,
+      }));
+    }
+  };
   componentDidUpdate(prevProps, prevState) {
     if (this.state.storedQuestions !== prevState.storedQuestions) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
         options: this.state.storedQuestions[this.state.idQuestion].options,
+      });
+    }
+    if (this.state.idQuestion !== prevState.idQuestion) {
+      this.setState({
+        question: this.state.storedQuestions[this.state.idQuestion].question,
+        options: this.state.storedQuestions[this.state.idQuestion].options,
+        btnDisabled: true,
+        userAnswer: null,
       });
     }
   }
@@ -51,7 +77,7 @@ class Quiz extends Component {
         <p
           key={index}
           className={`answerOptions ${
-            this.state.userAnswer === option ? "selected" : null
+            this.state.userAnswer === option ? "selected" : ""
           }`}
           onClick={() => this.submitAnswer(option)}
         >
@@ -66,7 +92,11 @@ class Quiz extends Component {
         <ProgressBar></ProgressBar>
         <h2> {this.state.question} </h2>
         {displayOption}
-        <button disabled={this.state.btnDisabled} className="btnSubmit">
+        <button
+          disabled={this.state.btnDisabled}
+          className="btnSubmit"
+          onClick={this.nextQuestion}
+        >
           Suivant
         </button>
       </div>
