@@ -1,9 +1,10 @@
 import ProgressBar from "../ProgressBar";
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Levels from "../Levels";
 import { QuizMarvel } from "../quizMarvel";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QuizOver from "../QuizOver";
 
 toast.configure();
 class Quiz extends Component {
@@ -19,6 +20,7 @@ class Quiz extends Component {
     userAnswer: null,
     score: 0,
     showWelcomMsg: false,
+    quizEnd: false,
   };
   storeDataRef = React.createRef();
 
@@ -40,6 +42,7 @@ class Quiz extends Component {
   nextQuestion = () => {
     if (this.state.idQuestion === this.state.maxQuestions - 1) {
       // END
+      this.gameOver();
     } else {
       this.setState((prevState) => ({
         idQuestion: prevState.idQuestion + 1,
@@ -115,6 +118,13 @@ class Quiz extends Component {
       btnDisabled: false,
     });
   };
+
+  gameOver = () => {
+    this.setState({
+      quizEnd: true,
+    });
+  };
+
   render() {
     const { pseudo } = this.props.userData;
     const displayOption = this.state.options.map((option, index) => {
@@ -130,8 +140,11 @@ class Quiz extends Component {
         </p>
       );
     });
-    return (
-      <div>
+
+    return this.state.quizEnd ? (
+      <QuizOver></QuizOver>
+    ) : (
+      <Fragment>
         <h2>Bonjour {pseudo} </h2>
         <Levels></Levels>
         <ProgressBar></ProgressBar>
@@ -144,7 +157,7 @@ class Quiz extends Component {
         >
           Suivant
         </button>
-      </div>
+      </Fragment>
     );
   }
 }
