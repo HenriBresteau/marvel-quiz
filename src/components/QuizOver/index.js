@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Fragment } from "react/cjs/react.production.min";
 const QuizOver = React.forwardRef((props, ref) => {
-  const { levelNames, score, maxQuestions, quizLevel, percent } = props;
+  const {
+    levelNames,
+    score,
+    maxQuestions,
+    quizLevel,
+    percent,
+    loadLevelQuestions,
+  } = props;
   const [asked, setAsked] = useState([]);
 
   useEffect(() => {
     setAsked(ref.current);
   }, [ref]);
   const avgGrade = maxQuestions / 2;
+  if (score < avgGrade) {
+    // setTimeout(() => loadLevelQuestions(0), 3000);
+    setTimeout(() => loadLevelQuestions(quizLevel), 3000);
+  }
   const decision =
     score >= avgGrade ? (
       <Fragment>
@@ -15,12 +26,22 @@ const QuizOver = React.forwardRef((props, ref) => {
           {quizLevel < levelNames.length ? (
             <Fragment>
               <p className="successMsg">Bravo, passez au niveau suivant !</p>
-              <button className="btnResult success">Niveau Suivant</button>
+              <button
+                className="btnResult success"
+                onClick={() => loadLevelQuestions(quizLevel)}
+              >
+                Niveau Suivant
+              </button>
             </Fragment>
           ) : (
             <Fragment>
               <p className="successMsg">Bravo, vous êtes un expert !</p>
-              <button className="btnResult gameOver">Niveau Suivant</button>
+              <button
+                className="btnResult gameOver"
+                onClick={() => loadLevelQuestions(0)}
+              >
+                Accueil
+              </button>
             </Fragment>
           )}
         </div>
@@ -61,7 +82,8 @@ const QuizOver = React.forwardRef((props, ref) => {
     ) : (
       <tr>
         <td colSpan="3">
-          <p style={{ textAlign: "center", color: "red" }}>Pas de réponses !</p>{" "}
+          <div className="loader"></div>
+          <p style={{ textAlign: "center", color: "red" }}>Pas de réponses !</p>
         </td>
       </tr>
     );
