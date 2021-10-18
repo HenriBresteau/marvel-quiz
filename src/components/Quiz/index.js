@@ -142,12 +142,15 @@ class Quiz extends Component {
     });
 
     return this.state.quizEnd ? (
-      <QuizOver></QuizOver>
+      <QuizOver ref={this.storeDataRef}></QuizOver>
     ) : (
       <Fragment>
         <h2>Bonjour {pseudo} </h2>
         <Levels></Levels>
-        <ProgressBar idQuestion={this.state.idQuestion} maxQuestions={this.state.maxQuestions} ></ProgressBar>
+        <ProgressBar
+          idQuestion={this.state.idQuestion}
+          maxQuestions={this.state.maxQuestions}
+        ></ProgressBar>
         <h2> {this.state.question} </h2>
         {displayOption}
         <button
