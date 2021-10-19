@@ -185,7 +185,10 @@ class Quiz extends Component {
     ) : (
       <Fragment>
         <h2>Bonjour {pseudo} </h2>
-        <Levels></Levels>
+        <Levels
+          levelNames={this.state.levelNames}
+          quizLevel={this.state.quizLevel}
+        ></Levels>
         <ProgressBar
           idQuestion={this.state.idQuestion}
           maxQuestions={this.state.maxQuestions}
