@@ -8,22 +8,29 @@ import Signup from "../SignUp";
 import ErrorPage from "../ErrorPage";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import ForgetPassword from "../ForgetPassword";
+import { IconContext } from "react-icons";
 
 function App() {
   return (
     <Router>
-      <Header></Header>
+      <IconContext.Provider value={{ style: { verticalAlign: "middle" } }}>
+        <Header></Header>
 
-      <Switch>
-        <Route path="/" exact component={Landing}></Route>
-        <Route path="/welcome" exact component={Welcome}></Route>
-        <Route path="/login" exact component={Login}></Route>
-        <Route path="/signup" exact component={Signup}></Route>
-        <Route path="/forgetpassword" exact component={ForgetPassword}></Route>
-        <Route component={ErrorPage}></Route>
-      </Switch>
+        <Switch>
+          <Route path="/" exact component={Landing}></Route>
+          <Route path="/welcome" exact component={Welcome}></Route>
+          <Route path="/login" exact component={Login}></Route>
+          <Route path="/signup" exact component={Signup}></Route>
+          <Route
+            path="/forgetpassword"
+            exact
+            component={ForgetPassword}
+          ></Route>
+          <Route component={ErrorPage}></Route>
+        </Switch>
 
-      <Footer></Footer>
+        <Footer></Footer>
+      </IconContext.Provider>
     </Router>
   );
 }
