@@ -5,6 +5,8 @@ import { QuizMarvel } from "../quizMarvel";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizOver from "../QuizOver";
+import { TiChevronRight } from "react-icons/ti";
+
 
 toast.configure();
 class Quiz extends Component {
@@ -167,6 +169,7 @@ class Quiz extends Component {
           }`}
           onClick={() => this.submitAnswer(option)}
         >
+          <TiChevronRight></TiChevronRight>
           {option}
         </p>
       );
