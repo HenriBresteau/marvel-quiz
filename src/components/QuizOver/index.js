@@ -4,6 +4,7 @@ import { Fragment } from "react/cjs/react.production.min";
 import { GiTrophyCup } from "react-icons/gi";
 import Loader from "../Loader";
 import Modal from "../Modal";
+import axios from "axios";
 
 const QuizOver = React.forwardRef((props, ref) => {
   const {
@@ -14,8 +15,14 @@ const QuizOver = React.forwardRef((props, ref) => {
     percent,
     loadLevelQuestions,
   } = props;
+
+  const API_PUBLIC_KEY = process.env.REACT_APP_MARVEL_API_KEY;
+  const hash = "91de7a537079e3f94bffc4bf3d718e42";
+
   const [asked, setAsked] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [charaterData, setCharaterData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setAsked(ref.current);
@@ -23,9 +30,22 @@ const QuizOver = React.forwardRef((props, ref) => {
 
   const showModal = (id) => {
     setOpenModal(true);
+    axios
+      .get(
+        `https://gateway.marvel.com/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`
+      )
+      .then((result) => {
+        setCharaterData(result.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   const hideModal = () => {
     setOpenModal(false);
+    setIsLoading(true);
   };
 
   const avgGrade = maxQuestions / 2;
@@ -111,6 +131,28 @@ const QuizOver = React.forwardRef((props, ref) => {
         </td>
       </tr>
     );
+  const resultInModal = !isLoading ? (
+    <Fragment>
+      <div className="modalHeader">
+        <h2>{charaterData.data.results[0].name}</h2>
+      </div>
+      <div className="modalBody">
+        <h3>Content</h3>
+      </div>
+      <div className="modalFooter">
+        <button className="modalBtn">Femer</button>
+      </div>
+    </Fragment>
+  ) : (
+    <Fragment>
+      <div className="modalHeader">
+        <h2>Réponse de Marvel ...</h2>
+      </div>
+      <div className="modalBody">
+        <Loader loadingMsg="Chargement..."></Loader>
+      </div>
+    </Fragment>
+  );
   return (
     <Fragment>
       {decision}
@@ -129,15 +171,7 @@ const QuizOver = React.forwardRef((props, ref) => {
         </table>
       </div>
       <Modal showModal={openModal} hideModal={hideModal}>
-        <div className="modalHeader">
-          <h2>Titre : </h2>
-        </div>
-        <div className="modalBody">
-          <h3>Content</h3>
-        </div>
-        <div className="modalFooter">
-          <button className="modalBtn">Femer</button>
-        </div>
+        {resultInModal}
       </Modal>
     </Fragment>
   );
